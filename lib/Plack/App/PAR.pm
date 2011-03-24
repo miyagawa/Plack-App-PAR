@@ -49,10 +49,15 @@ Plack::App::PAR - Run .par bundle as a PSGI application
 Plack::App::PAR is a Plack endpoint to run L<PAR> bundle as a PSGI
 application.
 
-When you build a new PAR archive, you have to have C<app.psgi> inside
-C<script> directory, like:
+You can use the standard .par files - the only restriction is that you
+have to have an I<entry point> PSGI script file as a C<app.psgi>
+inside C<script> directory (which can be changed with the C<script>
+option - see below).
 
   % pp -I lib -p -o myapp.par app.psgi
+
+This will create a C<myapp.par> bundle with C<app.psgi> as an entry
+point.
 
 =head1 OPTIONS
 
@@ -64,7 +69,8 @@ The path to the PAR archive file you want to run. Required.
 
 =item script
 
-The name of the script inside the PAR archive. I<script/app.psgi> by default.
+The name of the entry point script inside the PAR
+archive. C<script/app.psgi> by default.
 
 =back
 
