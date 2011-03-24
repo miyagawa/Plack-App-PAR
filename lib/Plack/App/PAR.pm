@@ -59,6 +59,10 @@ option - see below).
 This will create a C<myapp.par> bundle with C<app.psgi> as an entry
 point.
 
+=head1 WHY?
+
+Inspired by L<http://www.modernperlbooks.com/mt/2011/03/what-perl-could-learn-from-java-wars.html> :)
+
 =head1 OPTIONS
 
 =over 4
@@ -81,12 +85,15 @@ archive. C<script/app.psgi> by default.
 =item *
 
 There's no cleaner way to locate non-perl library files, for example
-to use for Static middleware path. L<File::ShareDir::PAR> could be used.
+static files directory to use for Static middleware
+path. I guess L<File::ShareDir::PAR> could be used.
 
 =item *
 
 I'm not sure what happens if you instantiate multiple applications of
-this class for multiple .par files in the same web server process.
+this class for multiple .par files in the same web server
+process. Because PAR's interface is based on C<import>, I won't be
+surprised if you get an unexpected result.
 
 =back
 
