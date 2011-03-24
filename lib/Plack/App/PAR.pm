@@ -13,15 +13,23 @@ sub prepare_app {
     my $self = shift;
 
     my $file   = $self->file or Carp::croak "'file' is not set";
-    my $script = $self->script || "script/app.psgi";
+    my $script = $self->script || "app.psgi";
 
     PAR->import({ file => $file });
-    my $app = eval PAR::read_file($script);
+    my $zip = PAR::par_handle($file);
 
-    Carp::croak "Couldn't compile '$script': $@" if $@;
-    Carp::croak "'$script' didn't return a CODE: $app" if ref($app) ne 'CODE';
+    my $member = PAR::_first_member($zip, "script/$script", $script);
 
-    $self->{_app} = $app;
+    my($fh, $is_new, $filename) = PAR::_tempfile($member->crc32String . ".psgi");
+
+    if ($is_new) {
+        my $file = $member->fileName;
+        print $fh "#line 1 \"$file\"\n";
+        $member->extractToFileHandle($fh);
+        seek $fh, 0, 0;
+    }
+
+    $self->{_app} = Plack::Util::load_psgi($filename);
 }
 
 sub call {
@@ -51,8 +59,8 @@ application.
 
 You can use the standard .par files - the only restriction is that you
 have to have an I<entry point> PSGI script file as a C<app.psgi>
-inside C<script> directory (which can be changed with the C<script>
-option - see below).
+either in the root or inside C<script> directory (which can be changed
+with the C<script> option - see below).
 
   % pp -I lib -p -o myapp.par app.psgi
 
@@ -74,7 +82,7 @@ The path to the PAR archive file you want to run. Required.
 =item script
 
 The name of the entry point script inside the PAR
-archive. C<script/app.psgi> by default.
+archive. C<app.psgi> by default.
 
 =back
 
