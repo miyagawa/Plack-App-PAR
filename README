@@ -1,0 +1,41 @@
+NAME
+    Plack::App::PAR - Run .par bundle as a PSGI application
+
+SYNOPSIS
+      % plackup -MPlack::App::PAR -e 'Plack::App::PAR->new(file => "/path/to/myapp.par")->to_app'
+
+DESCRIPTION
+    Plack::App::PAR is a Plack endpoint to run PAR bundle as a PSGI
+    application.
+
+    When you build a new PAR archive, you have to have "app.psgi" inside
+    "script" directory, like:
+
+      % pp -I lib -p -o myapp.par app.psgi
+
+OPTIONS
+    file
+        The path to the PAR archive file you want to run. Required.
+
+    script
+        The name of the script inside the PAR archive. *script/app.psgi* by
+        default.
+
+TODO/BUGS
+    *   There's no cleaner way to locate non-perl library files, for example
+        to use for Static middleware path. File::ShareDir::PAR could be
+        used.
+
+AUTHOR
+    Tatsuhiko Miyagawa <miyagawa@bulknews.net>
+
+COPYRIGHT
+    Copyright 2011- Tatsuhiko Miyagawa
+
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+SEE ALSO
+    PAR
+
